@@ -9,3 +9,55 @@
 h1 {
     @apply text-2xl font-bold text-gray-800;
 }
+
+table{
+
+}
+td, th{
+    border: 1px solid black;
+}
+td > div{
+    @apply flex justify-center px-3;
+}
+th{
+    @apply bg-gray-800 px-3 text-white;
+}
+tr:nth-child(odd){
+    @apply bg-gray-300;
+}
+
+label{
+    @apply flex flex-col;
+}
+input, select{
+    @apply outline-none border border-gray-300 focus:border-indigo-500 px-2 py-1 rounded-lg;
+}
+button, button[type='button']{
+    @apply bg-indigo-800 text-white px-3 py-2 rounded-lg hover:bg-indigo-500;
+}
+button:disabled {
+    @apply cursor-not-allowed bg-gray-300 text-gray-500;
+}
+button.secondary {
+    @apply bg-gray-400 text-gray-800 hover:bg-gray-200;
+}
+
+li{
+    @apply rounded-md border text-gray-200  px-3 py-2 border-gray-200;
+}
+li:hover{
+    @apply cursor-pointer bg-gray-700;
+}
+
+.sidebar-mobile{
+    @apply absolute top-0 left-0 w-1/2 h-screen;
+}
+.sidebar-desktop {
+    @apply w-64  px-3 py-5 flex text-white md:relative;
+}
+.icon-dark{
+    @apply text-2xl text-gray-900 bg-transparent hover:bg-gray-50;
+}
+.icon-white{
+    @apply text-2xl text-white bg-transparent hover:bg-gray-50;
+}

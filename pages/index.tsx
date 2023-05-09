@@ -1,10 +1,18 @@
 import Layout from '@layouts/Layout';
 import Head from 'next/head';
-import ReactLoading from 'react-loading';
-import { ToastContainer, toast } from 'react-toastify';
+import { data } from 'utils/data';
+import _ from 'lodash';
+import DateFilters from '@components/DateFilters';
+import ActionButtons from '@components/ActionButtons';
+import { RecogidasContextProvider } from '@context/recogidasContext';
+import { ModalRecogidas } from '@components/modals/ModalRecogidas';
+import { ModalDespachos } from '@components/modals/ModalDespachos';
+import { NextPage } from 'next';
+import {CardLote} from '@components/CardLote';
+import { useState } from 'react';
+import { MdFilterAlt, MdFilterAltOff } from 'react-icons/md';
 
-export default function Home() {
-  return (
+const Home:NextPage = () => (
     <>
       <Head>
         <title>Create Next App</title>
@@ -13,75 +21,92 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico'></link>
       </Head>
       <Layout>
-        <div className='flex flex-col h-full w-full'>
-          <div className='flex justify-center'>
-            <h1>Titulo</h1>
-          </div>
-          <div className='flex justify-between'>
-            <div>Filtros</div>
-            <div className='flex gap-2'>
-              <button>Nueva recogida</button>
-              <button>Nuevo despacho</button>
-            </div>
-          </div>
-          <DesktopTable/>
-          <MobileCards/>
-        </div>
+        <RecogidasContextProvider>
+          <RecogidasDespachos/>
+        </RecogidasContextProvider>
       </Layout>
     </>
   );
-};
-
+const RecogidasDespachos = () => {
+  const [showFilters, setShowFilters] = useState<boolean>(false);
+  return(
+    <div className='flex flex-col h-full w-full p-4 gap-2'>
+      <div className='flex justify-center'>
+        <h1>Recogidas y despachos</h1>
+        <button className='icon-dark' onClick={()=> setShowFilters(!showFilters)}>
+          {showFilters ? (<MdFilterAltOff/>) : (<MdFilterAlt/>)}
+        </button>
+      </div>
+        <div className='flex flex-col items-center justify-center gap-2 md:flex-row md:justify-between'>
+          {showFilters && <DateFilters/>}
+          <ActionButtons/>
+        </div>
+      <DesktopTable/>
+      <MobileCards/>
+      <div>Footer</div>
+      <ModalRecogidas/>
+      <ModalDespachos/>
+    </div>
+  )};
 const DesktopTable = () => {
-  const fireAlert = () => {
-    toast.success("Esto es una alerta de success");
-    toast.warning("Esto es una alerta de warning");
-    toast.error("Esto es una alerta de error");
-  }
+  const datos = _.groupBy(data,'Fecha');
   return (
-    <div className='hidden h-full flex flex-col md:flex'>
-      <div className='debug h-full'>
-        tabla
-        <button onClick={fireAlert}>Disparar alerta</button> 
-        <ReactLoading type='cylon' color='blue' height={50} width={50}/> 
+    <div className='hidden h-full flex-col md:flex'>
+      <div className='flex h-[80vh] justify-center p-6 overflow-y-auto'>
+        <table className='block'>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Lote 1</th>
+              <th>Lote 2</th>
+              <th>Lote 3</th>
+              <th>Lote 4</th>
+              <th>Lote 5</th>
+              <th>Lote 6</th>
+              <th>Lote 7</th>
+              <th>Lote 8</th>
+              <th>Lote 9</th>
+              <th>Lote 10</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.keys(datos).map((fecha) =>{
+              return(
+                <tr key={`row_${fecha}`}>
+                  <td>
+                    <div>
+                    {fecha}
+                    </div>
+                  </td>
+                  {datos[fecha].map((lote)=>{
+                    return(
+                        <td key={`row_${fecha}_${lote.lote}`}>
+                          <div>
+                            {lote.Racimos}
+                          </div>
+                        </td>
+                    );
+                  })}
+                </tr>
+              );
+              })}
+          </tbody>
+        </table>
       </div>
       <div>Paginacion</div>
     </div>
   );
-};
 
-const MobileCards = () => {
-  return (
-  <div className='grid grid-cols-2 h-full md:hidden'>
-    <div>
-      <span>Lote 1</span>
-      <div className='flex'>
-        <div>Dato 1</div>
-        <div>Dato 2</div>
-      </div>
-    </div>
+}
 
-    <div>
-      <span>Lote 2</span>
-      <div className='flex'>
-        <div>Dato 1</div>
-        <div>Dato 2</div>
-      </div>
-    </div>
-    <div>
-      <span>Lote 3</span>
-      <div className='flex'>
-        <div>Dato 1</div>
-        <div>Dato 2</div>
-      </div>
-    </div>
-    <div>
-      <span>Lote 4</span>
-      <div className='flex'>
-        <div>Dato 1</div>
-        <div>Dato 2</div>
-      </div>
-    </div>
+const MobileCards = () => (
+  <div className='grid grid-cols-2 sm:grid-cols-4 h-full md:hidden justify-items-center items-center gap-2'>
+    {[1,2,3,4,5,6,7,8,9,10].map((lote) => (
+    <CardLote key={`lote_${lote}`} loteNumero={lote}/>
+    ))}
+
+    
   </div>
   );
-};
+
+export default Home;
