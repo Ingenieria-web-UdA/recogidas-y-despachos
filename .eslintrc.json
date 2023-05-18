@@ -45,7 +45,7 @@
     "no-console": "error",
     "no-unused-vars": [
       2,
-      { "args": "after-used", "argsIgnorePattern": "^(parent|args)" }
+      { "args": "after-used", "argsIgnorePattern": "^(parent|args|context)" }
     ],
     //"@typescript-eslint/no-unused-vars": [
     //  2,
